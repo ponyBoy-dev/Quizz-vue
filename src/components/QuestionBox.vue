@@ -16,6 +16,7 @@
       </b-list-group>
 
       <b-button 
+        v-show="numTotal <10"
         variant="outline-primary" 
         @click='updateResults'
         :disabled="selectedAnswer === null || answered"
@@ -23,6 +24,7 @@
       Valider
       </b-button>
       <b-button 
+        v-show="numTotal <10"
         @click="nextQuest"
         :disabled="answered === false" 
         variant="success" >
@@ -39,7 +41,8 @@ export default {
   props: {
     currentQuestion: Object,
     nextQuest: Function,
-    increment : Function
+    increment : Function,
+    numTotal : Number
   },
   data(){
     return {

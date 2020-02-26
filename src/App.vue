@@ -7,10 +7,16 @@
       <b-row>
         <b-col sm="6" offset="3">
           <QuestionBox
-          v-if="questions.length"
+          v-if="questions.length && numTotal < 10"
           :currentQuestion="questions[index]"
           :nextQuest="nextQuest"
-          :increment="increment" />
+          :increment="increment"
+          :numTotal="numTotal" />
+          <FinalResults
+          v-if="numTotal === 10"
+          :numCorrect="numCorrect"
+          :numTotal="numTotal"
+           />
         </b-col>
       </b-row>
     </b-container>
@@ -20,12 +26,14 @@
 <script>
 import QuestionBox from "./components/QuestionBox.vue";
 import Header from "./components/Header.vue";
+import FinalResults from "./components/FinalResults";
 
 export default {
   name: "App",
   components: {
     Header,
-    QuestionBox
+    QuestionBox,
+    FinalResults
   },
   data(){
     return {
