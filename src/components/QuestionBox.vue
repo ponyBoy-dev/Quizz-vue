@@ -17,12 +17,16 @@
 
       <b-button 
         variant="outline-primary" 
-        @click='submitAnswer'
+        @click='updateResults'
         :disabled="selectedAnswer === null || answered"
       >
       Valider
       </b-button>
-      <b-button @click="nextQuest" variant="success" href="#">Suivante</b-button>
+      <b-button 
+        @click="nextQuest"
+        :disabled="answered === false" 
+        variant="success" >
+        Suivante</b-button>
     </b-jumbotron>
   </div>
   
@@ -66,16 +70,19 @@ export default {
       this.correctIndex = this.shuffledAnswers.indexOf(this.currentQuestion.correct_answer)
 
     },
-    submitAnswer(){
-      let isCorrect = false //move this from here
+    updateResults(){
+      let isCorrect = false 
 
       if(this.selectedAnswer === this.correctIndex){
         isCorrect = true
       }
 
-      this.increment(isCorrect)// to here => fct et bouton pour question suivante
+      this.increment(isCorrect)
       this.answered = true
     },
+    //updateResults(){
+      
+    //},
     answerClass(index){
       let answerClass = ''
 
