@@ -29,6 +29,11 @@
         :disabled="answered === false" 
         variant="success" >
         Suivante</b-button>
+        <b-button 
+        v-show="numTotal === 10"
+        @click="nextQuest" 
+        variant="success" >
+        Fini !</b-button>
     </b-jumbotron>
   </div>
   

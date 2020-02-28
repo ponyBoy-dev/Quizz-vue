@@ -2,18 +2,19 @@
   <div id="app">
     <Header
     :numCorrect="numCorrect"
-    :numTotal="numTotal" />
+    :numTotal="numTotal"
+    :index="index" />
     <b-container class="bv-example-row">
       <b-row>
         <b-col sm="6" offset="3">
           <QuestionBox
-          v-if="questions.length && numTotal < 10"
+          v-if="questions.length && index < 10"
           :currentQuestion="questions[index]"
           :nextQuest="nextQuest"
           :increment="increment"
           :numTotal="numTotal" />
           <FinalResults
-          v-if="numTotal === 10"
+          v-if="index > 9"
           :numCorrect="numCorrect"
           :numTotal="numTotal"
            />
