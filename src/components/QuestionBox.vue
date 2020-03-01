@@ -1,7 +1,7 @@
 <template>
   <div>
     <b-jumbotron>
-      <template v-slot:lead>{{currentQuestion.question}}</template>
+      <template v-slot:lead>{{theQuestion}}</template>
 
       <hr class="my-4" />
       <b-list-group>
@@ -42,6 +42,7 @@
 <script>
 import _ from 'lodash'
 
+
 export default {
   props: {
     currentQuestion: Object,
@@ -54,7 +55,8 @@ export default {
       selectedAnswer : null,
       shuffledAnswers : [],
       correctIndex : null,
-      answered : false
+      answered : false,
+      theQuestion : ''
     }
   },
   watch: {
@@ -64,11 +66,17 @@ export default {
         this.selectedAnswer = null;
         this.answered = false;
         this.shuffleAnswers();
+        this.theQuestion = this.decodeHTML(this.currentQuestion.question);
       }
       
     }
   },
   methods:{
+    decodeHTML(html){
+      let txt = document.createElement("textarea");
+      txt.innerHTML = html;
+      return txt.value;
+    },
     selectAnswer(index){
       this.selectedAnswer = index
     },
@@ -76,6 +84,9 @@ export default {
       let answers = [...this.currentQuestion.incorrect_answers, this.currentQuestion.correct_answer]
       this.shuffledAnswers = _.shuffle(answers)
       this.correctIndex = this.shuffledAnswers.indexOf(this.currentQuestion.correct_answer)
+      this.shuffledAnswers = this.shuffledAnswers.map(reponse => {
+        return this.decodeHTML(reponse)
+      }) 
 
     },
     updateResults(){
@@ -88,9 +99,6 @@ export default {
       this.increment(isCorrect)
       this.answered = true
     },
-    //updateResults(){
-      
-    //},
     answerClass(index){
       let answerClass = ''
 
