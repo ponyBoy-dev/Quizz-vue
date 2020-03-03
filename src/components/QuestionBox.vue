@@ -10,6 +10,7 @@
         :key="index"
         @click="selectAnswer(index)"
         :class="answerClass(index)"
+        :disabled="answered === true"
         >
           {{answer}}
         </b-list-group-item>
@@ -141,10 +142,16 @@ export default {
 }
 
 .correctAnswer{
-  background-color: aquamarine;
+  background: aquamarine;
+}
+.correctAnswer:hover{
+  background: aquamarine
 }
 
-.incorrectAnswer{
-  background-color: red;
+.incorrectAnswer, .incorrectAnswer:hover{
+  background: red;
+}
+.incorrectAnswer:hover{
+  background: red
 }
 </style>
