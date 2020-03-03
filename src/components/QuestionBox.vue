@@ -15,25 +15,28 @@
         </b-list-group-item>
       </b-list-group>
 
-      <b-button 
+      <!-- <b-button 
         v-show="numTotal <10"
         variant="outline-primary" 
         @click='updateResults'
-        :disabled="selectedAnswer === null || answered"
-      >
-      Valider
-      </b-button>
+        :disabled="selectedAnswer === null || answered">
+        Valider
+      </b-button> -->
+
       <b-button 
         v-show="numTotal <10"
         @click="nextQuest"
         :disabled="answered === false" 
         variant="success" >
-        Suivante</b-button>
-        <b-button 
+        Suivante
+      </b-button>
+
+      <b-button 
         v-show="numTotal === 10"
         @click="nextQuest" 
         variant="success" >
-        Fini !</b-button>
+        Fini !
+      </b-button>
     </b-jumbotron>
   </div>
   
@@ -79,6 +82,7 @@ export default {
     },
     selectAnswer(index){
       this.selectedAnswer = index
+      this.updateResults()
     },
     shuffleAnswers(){
       let answers = [...this.currentQuestion.incorrect_answers, this.currentQuestion.correct_answer]
@@ -102,13 +106,10 @@ export default {
     answerClass(index){
       let answerClass = ''
 
-      if(!this.answered && this.selectedAnswer === index){
-        answerClass = 'selected'
-      }else if (this.answered && this.correctIndex === index){
+      if (this.answered && this.correctIndex === index){
         answerClass = 'correctAnswer'
       }else if (this.answered && this.selectedAnswer === index && this.correctIndex !== index) {
         answerClass = 'incorrectAnswer'
-      
       }
 
       return answerClass
@@ -139,9 +140,6 @@ export default {
   margin : 0 5px;
 }
 
-.selected{
-  background-color: aqua;
-}
 .correctAnswer{
   background-color: aquamarine;
 }
