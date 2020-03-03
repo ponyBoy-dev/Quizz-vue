@@ -26,7 +26,7 @@
 
       <b-button 
         v-show="numTotal <10"
-        @click="nextQuest"
+        @click="submit"
         :disabled="answered === false" 
         variant="success" >
         Suivante
@@ -34,7 +34,7 @@
 
       <b-button 
         v-show="numTotal === 10"
-        @click="nextQuest" 
+        @click="submit" 
         variant="success" >
         Fini !
       </b-button>
@@ -114,6 +114,10 @@ export default {
       }
 
       return answerClass
+    },
+    submit(){
+      const isCorrect = this.selectedAnswer === this.shuffledAnswers.indexOf(this.currentQuestion.correct_answer)
+      this.$emit('submit', isCorrect)
     }
   },
   //mounted() { would have the same effect as in watch + immediate: true
@@ -124,9 +128,29 @@ export default {
       let answers = [...this.currentQuestion.incorrect_answers];
       answers.push(this.currentQuestion.correct_answer);
       return answers;
+    },
+    isCorrect(){
+      return this.question.correctAnswerId === this.answeredId
     }
   },
 };
+
+{
+  question: 'quid?',
+  answers: [
+    {text: 'moi', id: 1},
+    {text: 'toi', id: 2, correct: true},
+  ]
+}
+
+{
+  question: 'quid?',
+  answers: [
+    {text: 'moi', id: 1},
+    {text: 'toi', id: 2},
+  ],
+  correctAnswerId: 2
+}
 </script>
 
 <style scoped>

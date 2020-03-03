@@ -9,9 +9,11 @@
         <b-col sm="6" offset="3">
           <QuestionBox
           v-if="questions.length && index < 10"
-          :currentQuestion="questions[index]"
+          :key="currentQuestion.question /*kill mon composant a chaque fois que remarque que la key a changé*/"
+          :currentQuestion="currentQuestion"
           :nextQuest="nextQuest"
           :increment="increment"
+          @submit="onQuestionSubmit"
           :numTotal="numTotal" />
           <FinalResults
           v-if="index > 9"
@@ -55,14 +57,23 @@ export default {
       this.numTotal++
     }
   },
+  computed: {
+    currentQuestion(){
+      return this.questions[this.index]
+    }
+  },
   mounted: function (){
-    fetch('https://opentdb.com/api.php?amount=10&category=18&type=multiple', {
+    /* fetch('https://opentdb.com/api.php?amount=10&category=18&type=multiple', {
       method:'get'
     }).then((response)=>{
       return response.json();
     }).then((jsonData)=>{
-      this.questions = jsonData.results
-    });
+      this.questions = makeItBetter(jsonData.results)
+    }); */
+
+    opentdbClient.getQuestions({num: 10}).then(questions => {
+      this.questions = questions
+    })
   
   }
 };
