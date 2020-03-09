@@ -3,7 +3,8 @@
     <Header
     :numCorrect="numCorrect"
     :numTotal="numTotal"
-    :index="index" />
+    :index="index" 
+    :key="index"/>
     <b-container class="bv-example-row">
       <b-row>
         <b-col sm="6" offset="3">
@@ -13,8 +14,10 @@
           <QuestionBox
           v-if="questions.length && index < 10"
           :question="questions[index]"
+          :key="index"
           :nextQuest="nextQuest"
           @reponse="increment"
+          @suivante="nextQuest"
           :numTotal="numTotal" />
           <FinalResults
           v-if="index > 9"

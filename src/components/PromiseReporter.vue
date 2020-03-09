@@ -12,3 +12,10 @@ export default {
     
 }
 </script>
+
+<style scoped>
+.p{
+    margin-top:1em;
+}
+
+</style>

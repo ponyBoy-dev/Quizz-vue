@@ -20,7 +20,10 @@
 
 
       <b-button  
-        variant="success" >
+        variant="success"
+        :disabled="selectedAnswer === null"
+        @click="nextQuestion()"
+         >
         Suivante
       </b-button>
     </b-jumbotron>
@@ -30,8 +33,6 @@
 
 <script>
 import _ from 'lodash'
-//import decodeHTML from './src/utils/decodeHTML'
-
 
 export default {
   props: {
@@ -39,9 +40,7 @@ export default {
   },
   data(){
     return {
-      selectedAnswer : null
-      
-      
+      selectedAnswer : null 
   }
   },
   computed:{
@@ -75,6 +74,9 @@ export default {
         isCorrect = true
       }
       this.$emit('reponse', isCorrect)
+    },
+    nextQuestion(){
+      this.$emit('suivante')
     }
     
   }
@@ -82,6 +84,9 @@ export default {
 </script>
 
 <style scoped>
+.jumbotron{
+  margin-top: 1em;
+}
 .list-group{
   margin-bottom : 15px;
 }
