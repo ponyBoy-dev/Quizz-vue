@@ -1,42 +1,27 @@
 <template>
   <div>
     <b-jumbotron>
-      <template v-slot:lead>{{theQuestion}}</template>
+      <template v-slot:lead>{{question.question}}</template>
 
       <hr class="my-4" />
       <b-list-group>
-        <b-list-group-item 
-        v-for="(answer, index) in shuffledAnswers" 
+        <b-list-group-item
+        v-for="(answer, index) in shuffledAnswers"
         :key="index"
         @click="selectAnswer(index)"
         :class="answerClass(index)"
-        :disabled="answered === true"
+        :disabled="selectedAnswer !== null"
         >
-          {{answer}}
+
+        {{answer.text}} 
+        
         </b-list-group-item>
       </b-list-group>
 
-      <!-- <b-button 
-        v-show="numTotal <10"
-        variant="outline-primary" 
-        @click='updateResults'
-        :disabled="selectedAnswer === null || answered">
-        Valider
-      </b-button> -->
 
-      <b-button 
-        v-show="numTotal <10"
-        @click="nextQuest"
-        :disabled="answered === false" 
+      <b-button  
         variant="success" >
         Suivante
-      </b-button>
-
-      <b-button 
-        v-show="numTotal === 10"
-        @click="nextQuest" 
-        variant="success" >
-        Fini !
       </b-button>
     </b-jumbotron>
   </div>
@@ -45,87 +30,54 @@
 
 <script>
 import _ from 'lodash'
+//import decodeHTML from './src/utils/decodeHTML'
 
 
 export default {
   props: {
-    currentQuestion: Object,
-    nextQuest: Function,
-    increment : Function,
-    numTotal : Number
+    question: Object,
   },
   data(){
     return {
-      selectedAnswer : null,
-      shuffledAnswers : [],
-      correctIndex : null,
-      answered : false,
-      theQuestion : ''
-    }
-  },
-  watch: {
-    currentQuestion:{
-      immediate: true,
-      handler() {
-        this.selectedAnswer = null;
-        this.answered = false;
-        this.shuffleAnswers();
-        this.theQuestion = this.decodeHTML(this.currentQuestion.question);
-      }
+      selectedAnswer : null
       
+      
+  }
+  },
+  computed:{
+    shuffledAnswers(){
+      let shuffledAnswers = []
+      shuffledAnswers = _.shuffle(this.question.answers)
+      return shuffledAnswers
+    },
+    correctIndex(){
+      let correctIndex = this.shuffledAnswers.findIndex(x => x.id ===1)
+      return correctIndex
     }
   },
   methods:{
-    decodeHTML(html){
-      let txt = document.createElement("textarea");
-      txt.innerHTML = html;
-      return txt.value;
+    answerClass(index){
+      let answerClass = ''
+      if(index === this.correctIndex && this.selectedAnswer !== null){
+        answerClass = 'correctAnswer'
+      }else if(index === this.selectedAnswer){
+        answerClass = 'incorrectAnswer'
+      }
+      return answerClass
     },
     selectAnswer(index){
       this.selectedAnswer = index
-      this.updateResults()
+      this.isCorrect(index)
     },
-    shuffleAnswers(){
-      let answers = [...this.currentQuestion.incorrect_answers, this.currentQuestion.correct_answer]
-      this.shuffledAnswers = _.shuffle(answers)
-      this.correctIndex = this.shuffledAnswers.indexOf(this.currentQuestion.correct_answer)
-      this.shuffledAnswers = this.shuffledAnswers.map(reponse => {
-        return this.decodeHTML(reponse)
-      }) 
-
-    },
-    updateResults(){
-      let isCorrect = false 
-
-      if(this.selectedAnswer === this.correctIndex){
+    isCorrect(index){
+      let isCorrect = false
+      if(index === this.correctIndex){
         isCorrect = true
       }
-
-      this.increment(isCorrect)
-      this.answered = true
-    },
-    answerClass(index){
-      let answerClass = ''
-
-      if (this.answered && this.correctIndex === index){
-        answerClass = 'correctAnswer'
-      }else if (this.answered && this.selectedAnswer === index && this.correctIndex !== index) {
-        answerClass = 'incorrectAnswer'
-      }
-
-      return answerClass
+      this.$emit('reponse', isCorrect)
     }
-  },
-  //mounted() { would have the same effect as in watch + immediate: true
-    //this.shuffleAnswers()
-  //},
-  computed: {
-    answers() {
-      let answers = [...this.currentQuestion.incorrect_answers];
-      answers.push(this.currentQuestion.correct_answer);
-      return answers;
-    }
-  },
+    
+  }
 };
 </script>
 
