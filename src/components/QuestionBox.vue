@@ -45,9 +45,7 @@ export default {
   },
   computed:{
     shuffledAnswers(){
-      let shuffledAnswers = []
-      shuffledAnswers = _.shuffle(this.question.answers)
-      return shuffledAnswers
+      return _.shuffle(this.question.answers)
     },
     correctIndex(){
       let correctIndex = this.shuffledAnswers.findIndex(x => x.id ===1)
