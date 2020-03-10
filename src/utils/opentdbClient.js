@@ -7,13 +7,9 @@ function getQuestions(amount,categoryID, difficulty='any'){
     }else{
       URL = `https://opentdb.com/api.php?amount=${amount}&category=${categoryID}&difficulty=${difficulty}&type=multiple`
     }   
-    return fetch(URL, {
-      method:'get'
-    }).then((response)=>{
-      return response.json();
-    }).then((jsonData)=>{
-      return makeDataUsable(jsonData.results)
-    });     
+    return fetch(URL)
+      .then(resp => resp.json())
+      .then(json => makeDataUsable(json.results))
 }
 
 
