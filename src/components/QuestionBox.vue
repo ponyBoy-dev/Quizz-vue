@@ -9,7 +9,9 @@
         v-for="(answer, index) in shuffledAnswers"
         :key="index"
         @click="selectAnswer(index)"
-        :class="answerClass(index)"
+        :class="{
+          correctAnswer: index === correctIndex && selectedAnswer !== null,
+          incorrectAnswer: selectedAnswer !== null && selectedAnswer===index && selectedAnswer !== correctIndex}"
         :disabled="selectedAnswer !== null"
         >
 
@@ -45,9 +47,7 @@ export default {
   },
   computed:{
     shuffledAnswers(){
-      let shuffledAnswers = []
-      shuffledAnswers = _.shuffle(this.question.answers)
-      return shuffledAnswers
+      return _.shuffle(this.question.answers)
     },
     correctIndex(){
       let correctIndex = this.shuffledAnswers.findIndex(x => x.id ===1)
@@ -55,15 +55,6 @@ export default {
     }
   },
   methods:{
-    answerClass(index){
-      let answerClass = ''
-      if(index === this.correctIndex && this.selectedAnswer !== null){
-        answerClass = 'correctAnswer'
-      }else if(index === this.selectedAnswer){
-        answerClass = 'incorrectAnswer'
-      }
-      return answerClass
-    },
     selectAnswer(index){
       this.selectedAnswer = index
       this.isCorrect(index)

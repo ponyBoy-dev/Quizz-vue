@@ -19,11 +19,16 @@ export default {
     'numTotal',
     'index'
   ],
-  data(){
+  computed:{
+    questionN(){
+      return this.index+1
+    }
+  },
+  /*data(){
     return{
       questionN : this.index +1
     }
-  },
+  },*/
   methods:{
     highlight(){
       if(this.index > 9){

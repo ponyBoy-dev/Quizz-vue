@@ -3,8 +3,7 @@
     <Header
     :numCorrect="numCorrect"
     :numTotal="numTotal"
-    :index="index" 
-    :key="index"/>
+    :index="index" />
     <b-container class="bv-example-row">
       <b-row>
         <b-col sm="6" offset="3">
@@ -16,7 +15,7 @@
           :question="questions[index]"
           :key="index"
           :nextQuest="nextQuest"
-          @reponse="increment"
+          @reponse="onReponse"
           @suivante="nextQuest"
           :numTotal="numTotal" />
           <FinalResults
@@ -58,7 +57,7 @@ export default {
     nextQuest(){
       this.index++
     },
-    increment(isCorrect){
+    onReponse(isCorrect){
   
       if(isCorrect){
         this.numCorrect++

@@ -7,50 +7,52 @@ function getQuestions(amount,categoryID, difficulty='any'){
     }else{
       URL = `https://opentdb.com/api.php?amount=${amount}&category=${categoryID}&difficulty=${difficulty}&type=multiple`
     }   
-    return fetch(URL, {
-      method:'get'
-    }).then((response)=>{
-      return response.json();
-    }).then((jsonData)=>{
-      return makeDataUsable(jsonData.results)
-    });     
+    return fetch(URL)
+      .then(resp => resp.json())
+      .then(json => makeDataUsable(json.results))     
 }
 
 
 function makeDataUsable(arr){
     let questions = []
     arr.map(objet=>{
-        questions.push(questionsFactory(
-            arr.indexOf(objet), 
-            decodeHTML(objet.question), 
-            [],
-            1
-        ))
+        questions.push({
+            questID: arr.indexOf(objet), 
+            question: decodeHTML(objet.question), 
+            answers: [],
+            correctAnswerID: 1
+        })
     })
     for(let i=0;i<arr.length;i++){
-        questions[i].answers.push(answersFactory(decodeHTML(arr[i].correct_answer),1));
+        questions[i].answers.push({
+          text: decodeHTML(arr[i].correct_answer),
+          id: 1
+        });
         for(let k=0;k<3;k++){
-            questions[i].answers.push(answersFactory(decodeHTML(arr[i].incorrect_answers[k]),k+2))
+            questions[i].answers.push({
+              text: decodeHTML(arr[i].incorrect_answers[k]),
+              id: k + 2
+            })
         }    
     }
     return questions
     
 }
-const questionsFactory = (questID, question, answers, correctAnswerID)=>{
+/*const questionsFactory = (questID, question, answers, correctAnswerID)=>{
     return {
         questID,
         question,
         answers,
         correctAnswerID
     }
-}
-
+}*/
+/*
 const answersFactory = (text, id) => {
     return {
         text,
         id
     }
-}
+}*/
 
 export default getQuestions//terminer export et import dans App.vue
 /*
