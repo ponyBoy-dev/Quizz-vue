@@ -1,7 +1,9 @@
 <template>
   <div>
-    <b-nav pills>
-      <b-nav-item disabled><b>Un quizz cool</b></b-nav-item>
+    <b-nav pills fill>
+      <b-nav-item 
+      disabled
+      v-if="questionN<11"><b>Question  {{questionN}}/ 10</b></b-nav-item>
       <b-nav-item 
       disabled
       :class="highlight()">
@@ -17,6 +19,16 @@ export default {
     'numTotal',
     'index'
   ],
+  computed:{
+    questionN(){
+      return this.index+1
+    }
+  },
+  /*data(){
+    return{
+      questionN : this.index +1
+    }
+  },*/
   methods:{
     highlight(){
       if(this.index > 9){

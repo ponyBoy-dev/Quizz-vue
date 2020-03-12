@@ -7,11 +7,16 @@
     <b-container class="bv-example-row">
       <b-row>
         <b-col sm="6" offset="3">
+          <PromiseReporter
+          v-if="questions.length ===0"
+          :promiseStatus="promiseStatus"/>
           <QuestionBox
           v-if="questions.length && index < 10"
-          :currentQuestion="questions[index]"
+          :question="questions[index]"
+          :key="index"
           :nextQuest="nextQuest"
-          :increment="increment"
+          @reponse="onReponse"
+          @suivante="nextQuest"
           :numTotal="numTotal" />
           <FinalResults
           v-if="index > 9"
@@ -28,16 +33,20 @@
 import QuestionBox from "./components/QuestionBox.vue";
 import Header from "./components/Header.vue";
 import FinalResults from "./components/FinalResults";
+import getQuestions from "./utils/opentdbClient"
+import PromiseReporter from "./components/PromiseReporter"
 
 export default {
   name: "App",
   components: {
     Header,
+    PromiseReporter,
     QuestionBox,
     FinalResults
   },
   data(){
     return {
+      promiseStatus : "Un peu de patience, nous récupérons un set de questions",
       questions: [],
       index : 0,
       numCorrect : 0,
@@ -48,7 +57,8 @@ export default {
     nextQuest(){
       this.index++
     },
-    increment(isCorrect){
+    onReponse(isCorrect){
+  
       if(isCorrect){
         this.numCorrect++
       }
@@ -56,14 +66,13 @@ export default {
     }
   },
   mounted: function (){
-    fetch('https://opentdb.com/api.php?amount=10&category=18&type=multiple', {
-      method:'get'
-    }).then((response)=>{
-      return response.json();
-    }).then((jsonData)=>{
-      this.questions = jsonData.results
-    });
-  
+    getQuestions(10,18).then(questions => {
+      this.questions = questions;
+    }).catch(err =>{
+      console.log(err);
+      this.promiseStatus = "Nous n'avons pas pu récupérer de questions, rafraîchissez la page pour faire une nouvelle tentative"
+      console.log(this.promiseStatus);
+    })
   }
 };
 </script>
